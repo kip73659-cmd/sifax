@@ -2,7 +2,7 @@
 Standard library only. Serves the unified Stitch UI and a small JSON API.
 Binds to 127.0.0.1 so nothing outside this PC can reach it.
 """
-import json, os, sys, threading, time, webbrowser
+import json, os, sys, threading, time, webbrowser, hmac, hashlib, secrets, socket
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
@@ -12,7 +12,11 @@ if sys.stdout is None:                      # started with pythonw (no console):
 if sys.stderr is None:
     sys.stderr = open(os.path.join(BASE, "miko_server.log"), "a", buffering=1)
 UI = os.path.join(BASE, "ui")
-HOST, PORT = "127.0.0.1", 8765
+# Remote access: set MIKO_REMOTE=1 (see start_miko_remote.bat) to reach Miko from phones/PCs on your network.
+# Remote visitors must enter the access key stored in miko_access_key.txt. Without MIKO_REMOTE nothing changes.
+REMOTE = os.environ.get("MIKO_REMOTE") == "1"
+HOST, PORT = ("0.0.0.0" if REMOTE else "127.0.0.1"), 8765
+LOCAL_URL = "http://127.0.0.1:%d/" % 8765
 BRIDGE_TAG = '<script src="/assets/bridge.js"></script>'
 SCREENS = {"web-search", "image-gallery", "video-vault", "news-feed",
            "research-intel", "downloads", "settings", "overlay", "audio", "anime-room"}
@@ -339,7 +343,7 @@ def _about(body):
     modules = [{"module": m, "pip": pip, "ok": importlib.util.find_spec(m) is not None} for m, pip in mods]
     return {"ok": True, "modules": modules, "python": platform.python_version(), "os": platform.platform(),
             "folder": BASE, "memory_file": cfg["memory_file"], "downloads": miko_downloads.DOWNLOAD_DIR,
-            "url": "http://%s:%d/" % (HOST, PORT)}
+            "url": LOCAL_URL}
 
 @api("config/get")
 def _cfg_get(body):
@@ -354,6 +358,42 @@ READ_ONLY = {"ping", "status", "memory/list", "config/get", "download/list", "do
 ALLOWED_HOSTS = {"127.0.0.1:%d" % PORT, "localhost:%d" % PORT}
 ALLOWED_ORIGINS = {"http://" + h for h in ALLOWED_HOSTS}
 MAX_BODY = 2_000_000
+
+KEY_FILE = os.path.join(BASE, "miko_access_key.txt")
+_FAILS = {}
+
+def _access_key():
+    try:
+        k = open(KEY_FILE, encoding="utf-8").read().strip()
+        if len(k) >= 6:
+            return k
+    except Exception:
+        pass
+    k = secrets.token_urlsafe(9)
+    with open(KEY_FILE, "w", encoding="utf-8") as f:
+        f.write(k + "\n")
+    return k
+
+def _auth_token():
+    return hmac.new(_access_key().encode(), b"miko-remote-v1", hashlib.sha256).hexdigest()
+
+def _throttled(ip):
+    t = [x for x in _FAILS.get(ip, []) if time.time() - x < 60]
+    _FAILS[ip] = t
+    return len(t) >= 5
+
+def _fail(ip):
+    _FAILS.setdefault(ip, []).append(time.time())
+
+def _lan_ips():
+    ips = set()
+    try:
+        s_ = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s_.connect(("10.255.255.255", 1))
+        ips.add(s_.getsockname()[0]); s_.close()
+    except Exception:
+        pass
+    return sorted(ips)
 
 class Handler(BaseHTTPRequestHandler):
     server_version = "MikoStitch/1"
@@ -379,17 +419,86 @@ class Handler(BaseHTTPRequestHandler):
         with open(path, "rb") as f:
             self._send(200, f.read(), MIME.get(ext, "application/octet-stream"))
 
-    def _guard(self):
-        """Only Miko's own pages may talk to this server. Blocks other websites (CSRF) and DNS rebinding."""
-        if self.headers.get("Host", "") not in ALLOWED_HOSTS:
-            self._send(403, b"Forbidden host", "text/plain"); return False
-        origin = self.headers.get("Origin")
-        if origin and origin not in ALLOWED_ORIGINS:
-            self._send(403, b"Forbidden origin", "text/plain"); return False
+    def _site_ok(self):
+        """Same-origin/typed-in requests are fine. A same-site GET that loads Miko inside an iframe
+        (the Streamlit wrapper on another port of this same host) is allowed too; nothing else cross-site."""
         site = self.headers.get("Sec-Fetch-Site")
-        if site and site not in ("same-origin", "none"):
+        if not site or site in ("same-origin", "none"):
+            return True
+        return (site == "same-site" and self.command == "GET"
+                and self.headers.get("Sec-Fetch-Dest") == "iframe")
+
+    def _is_local(self):
+        """Opened on this PC itself (loopback client AND a localhost Host header). No key needed."""
+        return (self.client_address[0] in ("127.0.0.1", "::1")
+                and self.headers.get("Host", "") in ALLOWED_HOSTS)
+
+    def _authed(self):
+        raw = self.headers.get("Cookie", "")
+        for part in raw.split(";"):
+            k, _, v = part.strip().partition("=")
+            if k == "miko_auth" and hmac.compare_digest(v, _auth_token()):
+                return True
+        return False
+
+    def _login(self, post):
+        ip = self.client_address[0]
+        if post:
+            n = min(int(self.headers.get("Content-Length") or 0), 2000)
+            form = parse_qs(self.rfile.read(n).decode("utf-8", "ignore"))
+            attempt = (form.get("key", [""])[0]).strip()
+            if _throttled(ip):
+                return self._send(429, b"Too many tries. Wait a minute.", "text/plain")
+            if hmac.compare_digest(attempt.encode(), _access_key().encode()):
+                self.send_response(303)
+                self.send_header("Set-Cookie", "miko_auth=%s; Path=/; HttpOnly; SameSite=Strict; Max-Age=2592000" % _auth_token())
+                self.send_header("Location", "/")
+                self.send_header("Content-Length", "0")
+                self.end_headers()
+                return
+            _fail(ip)
+            msg = "Wrong key."
+        else:
+            msg = ""
+        page = ("<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'>"
+                "<body style='background:#0f0f14;color:#eee;font-family:sans-serif;display:grid;place-items:center;height:100vh;margin:0'>"
+                "<form method=post action=/login style='text-align:center'><h2>Miko</h2>"
+                "<input name=key type=password placeholder='Access key' autofocus style='padding:12px;font-size:16px;border-radius:8px;border:0'><br><br>"
+                "<button style='padding:10px 24px;font-size:16px;border-radius:8px;border:0'>Enter</button>"
+                "<p style='color:#f88'>%s</p></form></body>" % msg)
+        self._send(200, page.encode("utf-8"), MIME[".html"])
+
+    def _guard(self, post=False):
+        """Local window: only Miko's own pages (blocks CSRF / DNS rebinding).
+        Remote mode: everyone else needs the access key (cookie)."""
+        path = urlparse(self.path).path
+        if self._is_local():
+            origin = self.headers.get("Origin")
+            if origin and origin not in ALLOWED_ORIGINS:
+                self._send(403, b"Forbidden origin", "text/plain"); return False
+            if not self._site_ok():
+                self._send(403, b"Forbidden request", "text/plain"); return False
+            return True
+        if not REMOTE:
+            self._send(403, b"Forbidden host", "text/plain"); return False
+        host = self.headers.get("Host", "")
+        origin = self.headers.get("Origin")
+        if origin and origin != "http://" + host and origin != "https://" + host:
+            self._send(403, b"Forbidden origin", "text/plain"); return False
+        if not self._site_ok():
             self._send(403, b"Forbidden request", "text/plain"); return False
-        return True
+        if path == "/login":
+            self._login(post); return False
+        if self._authed():
+            return True
+        if post or path.startswith(("/api/", "/stream/", "/media", "/dlfile", "/animeproxy")):
+            self._send(401, b"Not logged in", "text/plain")
+        else:
+            self.send_response(302)
+            self.send_header("Location", "/login")
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+        return False
 
     def do_GET(self):
         if not self._guard():
@@ -458,7 +567,7 @@ class Handler(BaseHTTPRequestHandler):
         self.close_connection = True
 
     def do_POST(self):
-        if not self._guard():
+        if not self._guard(post=True):
             return
         p = urlparse(self.path).path
         n = int(self.headers.get("Content-Length") or 0)
@@ -508,7 +617,7 @@ def open_window(url):
 
 def main(open_browser=True):
     os.chdir(BASE)
-    url = "http://%s:%d/" % (HOST, PORT)
+    url = LOCAL_URL
     try:
         srv = ThreadingHTTPServer((HOST, PORT), Handler)
     except OSError:
@@ -521,6 +630,11 @@ def main(open_browser=True):
     if miko_chat.load_config().get("voice_enabled"):
         miko_voice.ENGINE.start()
     print("Miko is running at", url)
+    if REMOTE:
+        key = _access_key()
+        for ip in _lan_ips():
+            print("From other devices on your network open:  http://%s:%d/" % (ip, PORT))
+        print("Access key (also in miko_access_key.txt):", key)
     if open_browser:
         threading.Timer(0.8, lambda: open_window(url)).start()
     try:
