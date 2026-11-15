@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/>
+<title>Miko</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#141122;overflow:hidden}
+  iframe{border:0;width:100%;height:100%;display:block;background:#141122}
+  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+        color:#ddb7ff;font:600 18px Sora,Segoe UI,sans-serif;background:#141122;z-index:5;
+        transition:opacity .25s}
+  #boot.hide{opacity:0;pointer-events:none}
+</style></head>
+<body>
+<div id="boot">Waking Miko...</div>
+<iframe id="view" name="view" title="Miko" allow="fullscreen; autoplay; picture-in-picture; encrypted-media" allowfullscreen></iframe>
+<script>
+/* One-window shell: every Stitch screen is loaded in a single frame. The nav tabs inside each
+   screen carry data-path values; the bridge script injected by the server turns clicks into navigation.
+   The shell also (1) remembers the current search so all search tabs share it, and
+   (2) listens to the voice engine so "Miko, search for ..." opens the right screen. */
+const ROUTES = ["web-search","image-gallery","video-vault","news-feed",
+                "research-intel","downloads","settings","overlay","audio","anime-room"];
+const view = document.getElementById("view");
+const boot = document.getElementById("boot");
+let currentQ = new URLSearchParams(location.search).get("q") || "";
+function urlFor(route){ return location.pathname + (currentQ ? "?q=" + encodeURIComponent(currentQ) : "") + "#" + route; }
+function go(route){
+  if(!ROUTES.includes(route)) route = "web-search";
+  history.replaceState(null, "", urlFor(route));
+  view.src = "/screen/" + route;
+}
+window.addEventListener("message", e => {
+  const d = e.data || {};
+  if(d.type === "miko-nav") go(d.route);
+  if(d.type === "miko-q"){ currentQ = String(d.q || "").slice(0,200); history.replaceState(null, "", urlFor(location.hash.slice(1) || "web-search")); }
+  if(d.type === "miko-action" && d.action && d.action.action === "search"){ currentQ = d.action.q || ""; go("web-search"); }
+  if(d.type === "miko-action" && d.action && d.action.action === "anime") animeAction();
+});
+/* Anime Room commands (typed or spoken): the server queues them; the Anime Room screen picks them up. */
+function animeAction(){
+  let here = ""; try{ here = view.contentWindow.location.pathname; }catch(e){}
+  if(here.endsWith("/anime-room")) setTimeout(() => toScreen({type:"miko-anime"}), 150);
+  else go("anime-room");
+}
+window.addEventListener("hashchange", () => go(location.hash.slice(1)));
+view.addEventListener("load", () => boot.classList.add("hide"));
+go(location.hash.slice(1) || "web-search");
+
+/* ---- voice engine link (one small request every 1.5 s, only while this window is visible) ---- */
+let since = 0, first = true, busy = false;
+function toScreen(msg){ try{ view.contentWindow.postMessage(msg, "*"); }catch(e){} }
+async function poll(){
+  if(document.hidden || busy) return;
+  busy = true;
+  try{
+    const r = await fetch("/api/voice/events", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({since})});
+    const d = await r.json();
+    (d.events || []).forEach(ev => {
+      since = Math.max(since, ev.id);
+      if(first) return;                       // do not replay old events when the window opens
+      toScreen({type:"miko-voice", ev});
+      if(ev.type === "action" && ev.action === "search"){ currentQ = ev.q || ""; go("web-search"); }
+      if(ev.type === "action" && ev.action === "anime") animeAction();
+    });
+    first = false;
+    toScreen({type:"miko-status", voice:d.voice});
+  }catch(e){}
+  busy = false;
+}
+setInterval(poll, 1500); poll();
+view.addEventListener("load", () => setTimeout(poll, 300));
+</script>
+</body></html>

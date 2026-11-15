@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MIKO – Floating Desktop Hologram Overlay Mode</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            miko: {
+              bg: '#0a0814',
+              surface: 'rgba(20, 16, 36, 0.72)',
+              glass: 'rgba(26, 20, 48, 0.65)',
+              border: 'rgba(168, 85, 247, 0.35)',
+              glowBorder: 'rgba(236, 72, 153, 0.45)',
+              neonPurple: '#a855f7',
+              neonPink: '#f43f5e',
+              neonMagenta: '#ff00aa',
+              neonCyan: '#00f2ff',
+              neonViolet: '#8b5cf6'
+            }
+          },
+          fontFamily: {
+            sans: ['Segoe UI', 'Inter', '-apple-system', 'sans-serif'],
+            mono: ['Consolas', 'JetBrains Mono', 'monospace']
+          },
+          boxShadow: {
+            'neon-purple': '0 0 25px -4px rgba(168, 85, 247, 0.5), 0 0 10px -2px rgba(168, 85, 247, 0.3)',
+            'neon-pink': '0 0 25px -4px rgba(244, 63, 94, 0.5), 0 0 10px -2px rgba(244, 63, 94, 0.3)',
+            'neon-cyan': '0 0 20px -3px rgba(0, 242, 255, 0.45)',
+            'hologram-pedestal': '0 -15px 40px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(0, 242, 255, 0.4)'
+          },
+          animation: {
+            'pulse-slow': 'pulse 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float-subtle': 'float 5s ease-in-out infinite',
+            'spin-slow': 'spin 18s linear infinite',
+            'ping-slow': 'ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles -->
+<style data-purpose="cyber-effects">
+    /* Scanline & Hologram grid layer */
+    .hologram-scanlines {
+      background: linear-gradient(
+        rgba(18, 16, 38, 0) 50%, 
+        rgba(0, 242, 255, 0.035) 50%
+      ), 
+      linear-gradient(
+        90deg,
+        rgba(255, 0, 170, 0.02),
+        rgba(0, 0, 0, 0) 100%
+      );
+      background-size: 100% 4px, 6px 100%;
+    }
+
+    .acrylic-hud {
+      background: linear-gradient(135deg, rgba(28, 20, 54, 0.72) 0%, rgba(14, 11, 30, 0.78) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(168, 85, 247, 0.32);
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.6), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .acrylic-hud:hover {
+      border-color: rgba(244, 63, 94, 0.5);
+      box-shadow: 0 12px 40px -5px rgba(168, 85, 247, 0.25), inset 0 1px 2px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* Custom futuristic scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 12, 29, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.5);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(244, 63, 94, 0.8);
+    }
+
+    /* Audio Equalizer Animated Bars */
+    @keyframes eqBar {
+      0%, 100% { height: 6px; }
+      50% { height: 28px; }
+    }
+    .eq-bar-1 { animation: eqBar 0.9s ease-in-out infinite 0.1s; }
+    .eq-bar-2 { animation: eqBar 0.7s ease-in-out infinite 0.3s; }
+    .eq-bar-3 { animation: eqBar 1.1s ease-in-out infinite 0.2s; }
+    .eq-bar-4 { animation: eqBar 0.6s ease-in-out infinite 0.4s; }
+    .eq-bar-5 { animation: eqBar 0.85s ease-in-out infinite 0.15s; }
+    .eq-bar-6 { animation: eqBar 1.05s ease-in-out infinite 0.25s; }
+    .eq-bar-7 { animation: eqBar 0.75s ease-in-out infinite 0.05s; }
+    .eq-bar-8 { animation: eqBar 1.2s ease-in-out infinite 0.35s; }
+  </style>
+<style data-purpose="holographic-elements">
+    /* 3D Hologram Stage Base Rings */
+    .holo-ring-outer {
+      border: 2px dashed rgba(0, 242, 255, 0.55);
+      transform: rotateX(72deg);
+      box-shadow: 0 0 35px rgba(0, 242, 255, 0.45), inset 0 0 25px rgba(168, 85, 247, 0.45);
+    }
+    .holo-ring-inner {
+      border: 2px solid rgba(244, 63, 94, 0.65);
+      transform: rotateX(72deg) rotate(45deg);
+      box-shadow: 0 0 25px rgba(244, 63, 94, 0.5);
+    }
+    .holo-grid-pedestal {
+      background-image: 
+        radial-gradient(circle at center, rgba(168, 85, 247, 0.35) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, rgba(0, 242, 255, 0.15) 0px, transparent 1px, transparent 16px),
+        repeating-linear-gradient(90deg, rgba(0, 242, 255, 0.15) 0px, transparent 1px, transparent 16px);
+      transform: perspective(600px) rotateX(68deg);
+      border-radius: 50%;
+    }
+  </style>
+<!-- END: Custom Styles -->
+</head>
+<body class="bg-[#0b0916] text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative">
+<!-- BEGIN: Desktop Background Layer -->
+<div class="absolute inset-0 z-0 bg-cover bg-center" data-purpose="desktop-wallpaper" style="background-image: radial-gradient(circle at 75% 30%, rgba(139, 92, 246, 0.22) 0%, transparent 50%), radial-gradient(circle at 25% 70%, rgba(244, 63, 94, 0.18) 0%, transparent 60%), linear-gradient(135deg, #090713 0%, #130f24 50%, #0d0a1b 100%);">
+<!-- Cyber Grid Subtle Overlay -->
+<div class="absolute inset-0 bg-[radial-gradient(rgba(168,85,247,0.12)_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-80"></div>
+<!-- Scanlines -->
+<div class="absolute inset-0 hologram-scanlines pointer-events-none"></div>
+<!-- Desktop Icons (Windows 11 Cyber Theme) -->
+<div class="absolute top-6 left-6 flex flex-col gap-5 z-10" data-purpose="desktop-icons">
+<!-- Icon 1: Recycle Bin -->
+<div class="group flex flex-col items-center w-20 p-2 rounded-xl hover:bg-white/10 hover:backdrop-blur-md transition-all cursor-pointer border border-transparent hover:border-purple-400/30">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-900/60 to-slate-900/80 border border-purple-500/30 flex items-center justify-center text-purple-300 shadow-md group-hover:scale-105 transition-transform">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+</div>
+<span class="mt-1.5 text-xs text-slate-200 font-medium tracking-wide drop-shadow text-center">Recycle Bin</span>
+</div>
+<!-- Icon 2: Monster Hunter Wilds -->
+<div class="group flex flex-col items-center w-20 p-2 rounded-xl bg-purple-500/10 backdrop-blur-sm border border-purple-400/40 hover:bg-white/15 transition-all cursor-pointer shadow-lg shadow-purple-900/30">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-600/80 to-purple-950/90 border border-amber-400/50 flex items-center justify-center text-amber-200 group-hover:scale-105 transition-transform relative">
+<span class="text-xs font-black tracking-tighter text-amber-300">MHW</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-[#090713] rounded-full animate-ping-slow"></span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 border-2 border-[#090713] rounded-full"></span>
+</div>
+<span class="mt-1.5 text-[11px] text-purple-200 font-semibold tracking-wide drop-shadow text-center line-clamp-1">MH Wilds</span>
+<span class="text-[9px] text-emerald-400 font-mono tracking-tighter">Running</span>
+</div>
+<!-- Icon 3: VS Code -->
+<div class="group flex flex-col items-center w-20 p-2 rounded-xl hover:bg-white/10 hover:backdrop-blur-md transition-all cursor-pointer border border-transparent hover:border-cyan-400/30">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-900/60 to-blue-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-300 group-hover:scale-105 transition-transform">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
+<path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .32 8.718l3.664 3.28-3.664 3.281a.999.999 0 0 0-.007 1.457l1.322 1.202a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.49 1.49 0 0 0 1.704.29l4.94-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352z"></path>
+</svg>
+</div>
+<span class="mt-1.5 text-xs text-slate-200 font-medium tracking-wide drop-shadow text-center">VS Code</span>
+</div>
+<!-- Icon 4: Spotify -->
+<div class="group flex flex-col items-center w-20 p-2 rounded-xl hover:bg-white/10 hover:backdrop-blur-md transition-all cursor-pointer border border-transparent hover:border-green-400/30">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-900/60 to-slate-900/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
+<svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path>
+</svg>
+</div>
+<span class="mt-1.5 text-xs text-slate-200 font-medium tracking-wide drop-shadow text-center">Spotify</span>
+</div>
+<!-- Icon 5: Windows Terminal -->
+<div class="group flex flex-col items-center w-20 p-2 rounded-xl hover:bg-white/10 hover:backdrop-blur-md transition-all cursor-pointer border border-transparent hover:border-pink-400/30">
+<div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-900 to-black border border-pink-500/30 flex items-center justify-center text-pink-400 group-hover:scale-105 transition-transform">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<span class="mt-1.5 text-xs text-slate-200 font-medium tracking-wide drop-shadow text-center">Terminal</span>
+</div>
+</div>
+</div>
+<!-- END: Desktop Background Layer -->
+<!-- BEGIN: Main Interactive Overlay Interface -->
+<main class="relative z-20 w-full h-full pointer-events-none p-5 pb-16 flex flex-col justify-between">
+<!-- Top Floating Command Bar & Global Status (Interactive) -->
+<header class="w-full flex justify-center items-center pointer-events-auto" data-purpose="top-command-hud">
+<div class="acrylic-hud px-5 py-2.5 rounded-full flex items-center gap-4 shadow-neon-purple border-purple-500/40 max-w-4xl w-full">
+<!-- Miko Brand Logo / Mode Pill -->
+<div class="flex items-center gap-2 pl-1 pr-3 border-r border-purple-500/30">
+<div class="relative w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/50">
+<span class="font-bold text-white text-xs tracking-tighter">MIKO</span>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-cyan-400 rounded-full border border-purple-950 animate-ping"></span>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-cyan-400 rounded-full border border-purple-950"></span>
+</div>
+<div class="flex flex-col">
+<span class="text-[11px] font-bold tracking-wider text-pink-400 uppercase leading-none">Hologram HUD</span>
+<span class="text-[9px] text-purple-300 font-mono">v4.8 • Tokyo Cloud</span>
+</div>
+</div>
+<!-- Search Bar Input Form -->
+<div class="relative flex-1 flex items-center">
+<svg class="w-4 h-4 text-purple-400 absolute left-3 pointer-events-none" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></path>
+</svg>
+<input class="w-full pl-9 pr-24 py-1.5 bg-black/40 border border-purple-500/30 rounded-full text-xs text-purple-100 placeholder-purple-400/60 focus:outline-none focus:border-pink-500 focus:ring-1 focus:ring-pink-500/50 transition-all font-sans" placeholder="Ask Miko anything or type command... (Win + Space)" type="text" value="Analyze weapon combo optimization for Insect Glaive in MH Wilds"/>
+<div class="absolute right-2 flex items-center gap-1">
+<kbd class="px-1.5 py-0.5 text-[9px] font-mono bg-purple-900/60 text-purple-300 border border-purple-400/40 rounded">Win</kbd>
+<kbd class="px-1.5 py-0.5 text-[9px] font-mono bg-purple-900/60 text-purple-300 border border-purple-400/40 rounded">Space</kbd>
+</div>
+</div>
+<!-- Functional Quick Chips -->
+<div class="hidden xl:flex items-center gap-1.5 border-l border-purple-500/30 pl-3">
+<button class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-purple-500/20 text-purple-200 border border-purple-400/30 hover:bg-pink-500/30 hover:text-white transition-all flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span> Research
+          </button>
+<button class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-purple-500/20 text-purple-200 border border-purple-400/30 hover:bg-cyan-500/30 hover:text-white transition-all flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Audio Sync
+          </button>
+<button class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-500/20 text-emerald-200 border border-emerald-400/30 hover:bg-emerald-500/40 transition-all flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> DL: 2 Active
+          </button>
+</div>
+<!-- Action Controls -->
+<div class="flex items-center gap-1.5 border-l border-purple-500/30 pl-3">
+<!-- Voice Mic Trigger -->
+<button class="relative p-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:brightness-110 shadow-lg shadow-pink-500/40 transition-all" title="Voice Interaction (Active)">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-pink-300 rounded-full animate-ping"></span>
+</button>
+<!-- Screenshot / OCR Lens -->
+<button class="p-2 rounded-full bg-purple-900/50 hover:bg-purple-800 text-purple-200 border border-purple-500/30 hover:text-cyan-300 transition-all" title="Screen OCR &amp; Vision AI">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Minimize Overlay Mode -->
+<button class="p-2 rounded-full bg-purple-900/50 hover:bg-purple-800 text-purple-300 border border-purple-500/30 transition-all" title="Dock to Taskbar">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+<!-- Workspace Mid Area: Split into Left Telemetry & Floating Hologram Assistant -->
+<div class="flex-1 w-full grid grid-cols-12 gap-6 items-center mt-2 mb-2">
+<!-- LEFT COLUMN: Live System, Audio Visualizer & Notes (Pointer Events Auto) -->
+<section class="col-span-12 lg:col-span-5 xl:col-span-4 flex flex-col gap-4 pointer-events-auto pl-2" data-purpose="left-gadget-cluster">
+<!-- WIDGET 1: Gaming Telemetry & Neural Hardware Monitor -->
+<article class="acrylic-hud p-4 rounded-2xl relative overflow-hidden group" data-purpose="telemetry-card">
+<!-- Ambient glowing corner -->
+<div class="absolute -right-8 -top-8 w-24 h-24 bg-purple-500/20 rounded-full blur-xl pointer-events-none"></div>
+<div class="flex items-center justify-between pb-3 border-b border-purple-500/20">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-neon-cyan animate-pulse"></span>
+<h2 class="text-xs font-bold text-slate-100 tracking-wider uppercase flex items-center gap-1.5">
+                Gaming Telemetry HUD
+              </h2>
+</div>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300">
+              OPTIMAL • 14ms
+            </span>
+</div>
+<!-- Active Game Detected Cardlet -->
+<div class="mt-3 p-2 rounded-xl bg-purple-950/40 border border-purple-500/30 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 font-bold text-xs">
+                MHW
+              </div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-slate-100">Monster Hunter Wilds</span>
+<span class="text-[10px] text-pink-300">Companion Profile: Aggressive Glaive v2</span>
+</div>
+</div>
+<button class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-pink-500/30 hover:bg-pink-500/50 border border-pink-400 text-pink-200 transition-colors">
+              Build Guide
+            </button>
+</div>
+<!-- Realtime Hardware Metrics -->
+<div class="grid grid-cols-3 gap-2.5 mt-3 pt-1">
+<!-- GPU -->
+<div class="p-2.5 rounded-xl bg-purple-950/30 border border-purple-500/20 flex flex-col">
+<span class="text-[10px] text-purple-300 font-mono">RTX 4090</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="text-base font-bold text-cyan-300 font-mono">42°C</span>
+<span class="text-[10px] text-slate-400">38% load</span>
+</div>
+<div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-cyan-400 h-full rounded-full" style="width: 38%"></div>
+</div>
+</div>
+<!-- CPU -->
+<div class="p-2.5 rounded-xl bg-purple-950/30 border border-purple-500/20 flex flex-col">
+<span class="text-[10px] text-purple-300 font-mono">i9 14900KS</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="text-base font-bold text-pink-400 font-mono">51°C</span>
+<span class="text-[10px] text-slate-400">24% load</span>
+</div>
+<div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full" style="width: 24%"></div>
+</div>
+</div>
+<!-- VRAM & RAM -->
+<div class="p-2.5 rounded-xl bg-purple-950/30 border border-purple-500/20 flex flex-col">
+<span class="text-[10px] text-purple-300 font-mono">Memory</span>
+<div class="flex items-baseline justify-between mt-1">
+<span class="text-base font-bold text-purple-300 font-mono">19.4</span>
+<span class="text-[10px] text-slate-400">/64 GB</span>
+</div>
+<div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-purple-500 h-full rounded-full" style="width: 30%"></div>
+</div>
+</div>
+</div>
+</article>
+<!-- WIDGET 2: Audio & Voice Reactive Visualizer Capsule -->
+<article class="acrylic-hud p-4 rounded-2xl flex flex-col gap-3" data-purpose="audio-hud-card">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-pink-400" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"></path>
+</svg>
+<span class="text-xs font-bold text-slate-100 uppercase tracking-wider">Audio Reactive Sync</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] text-pink-300 font-mono bg-pink-500/20 px-2 py-0.5 rounded border border-pink-500/40">ASMR Whisper ON</span>
+</div>
+</div>
+<!-- Reactive Equalizer Graphic -->
+<div class="h-10 w-full bg-purple-950/50 rounded-xl px-4 flex items-center justify-between border border-purple-500/20">
+<div class="flex items-end gap-1.5 h-7">
+<div class="w-1.5 bg-gradient-to-t from-pink-500 to-cyan-400 rounded-full eq-bar-1"></div>
+<div class="w-1.5 bg-gradient-to-t from-purple-500 to-pink-400 rounded-full eq-bar-2"></div>
+<div class="w-1.5 bg-gradient-to-t from-cyan-400 to-purple-400 rounded-full eq-bar-3"></div>
+<div class="w-1.5 bg-gradient-to-t from-pink-400 to-cyan-300 rounded-full eq-bar-4"></div>
+<div class="w-1.5 bg-gradient-to-t from-purple-400 to-pink-500 rounded-full eq-bar-5"></div>
+<div class="w-1.5 bg-gradient-to-t from-cyan-400 to-purple-500 rounded-full eq-bar-6"></div>
+<div class="w-1.5 bg-gradient-to-t from-pink-500 to-cyan-400 rounded-full eq-bar-7"></div>
+<div class="w-1.5 bg-gradient-to-t from-purple-500 to-pink-400 rounded-full eq-bar-8"></div>
+<div class="w-1.5 bg-gradient-to-t from-pink-500 to-cyan-400 rounded-full eq-bar-3"></div>
+<div class="w-1.5 bg-gradient-to-t from-purple-500 to-pink-400 rounded-full eq-bar-1"></div>
+</div>
+<!-- Mini Track info -->
+<div class="flex flex-col text-right">
+<span class="text-[11px] font-semibold text-slate-100 truncate max-w-[170px]">Cyber Lo-Fi #04 – Akihabara Nightfall</span>
+<span class="text-[9px] text-purple-300">Spotify Desktop Client • 2:14 / 3:45</span>
+</div>
+</div>
+<!-- Playback Controls -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<button class="text-purple-300 hover:text-white transition-colors">
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path></svg>
+</button>
+<button class="w-7 h-7 rounded-full bg-pink-500 hover:bg-pink-400 flex items-center justify-center text-white shadow-md shadow-pink-500/40">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>
+</button>
+<button class="text-purple-300 hover:text-white transition-colors">
+<svg class="w-4 h-4" fill="currentColor" viewbox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path></svg>
+</button>
+</div>
+<!-- Volume slider -->
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-purple-300" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"></path></svg>
+<input class="w-20 h-1 bg-purple-900 rounded-lg appearance-none accent-pink-500 cursor-pointer" max="100" min="0" type="range" value="72"/>
+</div>
+</div>
+</article>
+<!-- WIDGET 3: Floating Neural Scratchpad / Pinned Notes -->
+<article class="acrylic-hud p-4 rounded-2xl flex flex-col gap-2.5" data-purpose="scratchpad-hud-card">
+<div class="flex items-center justify-between pb-1 border-b border-purple-500/20">
+<span class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+</svg>
+              Neural Scratchpad (3 Pinned)
+            </span>
+<button class="text-[10px] text-purple-300 hover:text-pink-300 font-mono">+ New Note</button>
+</div>
+<div class="flex flex-col gap-2 pt-1 text-xs">
+<div class="p-2 rounded-lg bg-purple-950/40 border-l-2 border-pink-500 flex justify-between items-center hover:bg-purple-900/30 transition-colors">
+<span class="text-slate-200 truncate">MH Wilds: Insect Glaive Triple Up buff cycle</span>
+<span class="text-[10px] text-pink-400 font-mono shrink-0 ml-2">Active Build</span>
+</div>
+<div class="p-2 rounded-lg bg-purple-950/40 border-l-2 border-cyan-400 flex justify-between items-center hover:bg-purple-900/30 transition-colors">
+<span class="text-slate-200 truncate">DLSS 4 Multi-Frame analysis benchmark logs</span>
+<span class="text-[10px] text-cyan-400 font-mono shrink-0 ml-2">Copied</span>
+</div>
+<div class="p-2 rounded-lg bg-purple-950/40 border-l-2 border-yellow-400 flex justify-between items-center hover:bg-purple-900/30 transition-colors">
+<span class="text-slate-200 truncate">AmiAmi Akihabara figure preorder closing 23:59</span>
+<span class="text-[10px] text-yellow-400 font-mono shrink-0 ml-2">Reminder</span>
+</div>
+</div>
+</article>
+</section>
+<!-- RIGHT COLUMN: The Floating Hologram Assistant & Interactive Capsule -->
+<section class="col-span-12 lg:col-span-7 xl:col-span-8 h-full flex flex-col justify-end items-end relative pr-4 pointer-events-none" data-purpose="hologram-companion-stage">
+<div class="relative w-full max-w-2xl flex flex-col items-center justify-end pb-8">
+<!-- Hologram Dialogue Bubble Capsule (Pointer Events Auto) -->
+<div class="pointer-events-auto w-full max-w-xl mb-4 mr-10 acrylic-hud p-4 rounded-3xl shadow-neon-pink border-pink-500/50 animate-float-subtle relative z-30" data-purpose="dialogue-speech-capsule">
+<!-- Speech Arrow -->
+<div class="absolute -bottom-3 right-24 w-6 h-6 acrylic-hud rotate-45 border-r border-b border-pink-500/50"></div>
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-pink-500 p-0.5 shadow-lg shadow-pink-500/50 shrink-0">
+<img alt="Miko Mini Avatar" class="w-full h-full object-cover rounded-[14px]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcSJwiqF-RRKQZHzb1QVZ4J26gjMszQgdqoryD6rGFSp08plhkuKbB26lbBx3_4624G8YNnjkT_QPRAe-TzFaVa6fpu0ePk5X_e1X0d8SgKxruYfckkTt-PJWxQucuolSF1lL-Sv8SRG12Wb6tWIPLxpg1j-bBG0LFIjOzYoFypAGHpipsFdHmpc3t1eQwDOE4IblRDmZ7eyIrrMciNI8Dsx9qzRCnn0GnPtAww4A"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-bold text-sm text-pink-300">MIKO ♡</span>
+<span class="text-[10px] font-mono px-1.5 py-0.2 bg-purple-900/80 text-cyan-300 rounded border border-cyan-400/40">Hologram Live</span>
+</div>
+<span class="text-[10px] text-purple-300 font-mono">0.08ms latency</span>
+</div>
+<p class="text-xs text-slate-100 leading-relaxed font-normal">
+                  "Hello <strong class="text-pink-300 font-semibold">Sifax!</strong> ♡ I'm floating over your desktop in low-latency hologram mode! I've indexed your active game <span class="text-amber-300">Monster Hunter Wilds</span> and Spotify audio. What shall we tackle next?"
+                </p>
+<!-- Quick Companion Interactive Buttons -->
+<div class="flex flex-wrap items-center gap-2 mt-3 pt-2 border-t border-purple-500/20">
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/25 text-pink-200 border border-pink-500/50 hover:bg-pink-500 hover:text-white transition-all shadow-sm">
+                    ✨ Pet / Poke Head
+                  </button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-200 border border-purple-400/30 hover:bg-purple-600 hover:text-white transition-all shadow-sm">
+                    🔇 Mute TTS
+                  </button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-200 border border-cyan-400/30 hover:bg-cyan-500 hover:text-black transition-all shadow-sm">
+                    📌 Snap to Corner
+                  </button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-950/60 text-slate-300 border border-purple-500/30 hover:bg-purple-800 transition-all shadow-sm">
+                    ⚙️ Mini Widget Mode
+                  </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Holographic Avatar Projection Container -->
+<div class="relative flex flex-col items-center justify-center" data-purpose="holographic-projection-body">
+<!-- Floating Holographic Digital Particles & Rune Orbs -->
+<div class="absolute -top-10 -left-12 w-6 h-6 rounded-full border border-cyan-400/80 bg-cyan-400/20 shadow-neon-cyan animate-ping-slow pointer-events-none"></div>
+<div class="absolute top-1/3 -right-14 w-8 h-8 rounded-full border border-pink-400/80 bg-pink-400/20 shadow-neon-pink animate-float-subtle pointer-events-none"></div>
+<!-- Cybernetic Code Streamers floating next to Miko -->
+<div class="absolute left-4 top-1/4 font-mono text-[9px] text-cyan-400/70 tracking-widest hidden md:flex flex-col gap-1 pointer-events-none select-none">
+<span>0x7F4A [STREAM_ONLINE]</span>
+<span>RENDER: HOLO_STEREOSCOPIC</span>
+<span>FPS: 165.0 Hz LOCKED</span>
+<span>NEURAL_WEIGHT: 0.9942</span>
+</div>
+<div class="absolute right-4 top-1/2 font-mono text-[9px] text-pink-400/70 tracking-widest hidden md:flex flex-col gap-1 pointer-events-none select-none text-right">
+<span>SYNC_TARGET: DESKTOP_OVERLAY</span>
+<span>AUDIO_FREQ: 48.0 kHz</span>
+<span>GAZE_FOLLOW: ENABLED</span>
+<span>KAWAII_LEVEL: MAX</span>
+</div>
+<!-- Main Holographic Image Entity -->
+<div class="relative z-10 transition-transform duration-300 hover:scale-105 pointer-events-auto cursor-pointer" title="MIKO Desktop Companion">
+<img alt="Full body and bust anime girl holographic AI assistant avatar with glowing translucent neon purple and pink aura, glowing cat-ear headset, vibrant violet hair with sakura flower hairpin, radiant purple eyes, wearing futuristic dark cyber jacket, soft holographic scan lines, transparent floating particle sparks, cyberpunk aesthetic, dark transparent background, ultra high quality key visual" class="max-h-[580px] w-auto object-contain drop-shadow-[0_0_35px_rgba(168,85,247,0.75)] filter brightness-105 contrast-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcSJwiqF-RRKQZHzb1QVZ4J26gjMszQgdqoryD6rGFSp08plhkuKbB26lbBx3_4624G8YNnjkT_QPRAe-TzFaVa6fpu0ePk5X_e1X0d8SgKxruYfckkTt-PJWxQucuolSF1lL-Sv8SRG12Wb6tWIPLxpg1j-bBG0LFIjOzYoFypAGHpipsFdHmpc3t1eQwDOE4IblRDmZ7eyIrrMciNI8Dsx9qzRCnn0GnPtAww4A"/>
+</div>
+<!-- 3D Pedestal Stage Hologram Projector Rings at her base -->
+<div class="w-96 h-28 relative -mt-20 flex items-center justify-center pointer-events-none" data-purpose="hologram-stage-rings">
+<!-- Hologram Grid Floor Disc -->
+<div class="absolute w-80 h-40 holo-grid-pedestal"></div>
+<!-- Outer Dashed Cyan Holographic Ring -->
+<div class="absolute w-80 h-32 rounded-full holo-ring-outer animate-spin-slow"></div>
+<!-- Inner Glowing Pink Ring -->
+<div class="absolute w-64 h-24 rounded-full holo-ring-inner"></div>
+<!-- Center Core Beam Glow -->
+<div class="w-36 h-36 bg-gradient-to-t from-cyan-400/40 via-purple-600/30 to-transparent rounded-full blur-xl shadow-hologram-pedestal animate-pulse-slow"></div>
+</div>
+</div>
+<!-- Hologram Control & Opacity Dock (Floating HUD under assistant) -->
+<div class="acrylic-hud px-4 py-2 rounded-2xl flex items-center gap-4 text-xs shadow-lg pointer-events-auto mt-2" data-purpose="hologram-opacity-dock">
+<div class="flex items-center gap-2">
+<span class="text-purple-300 font-mono text-[11px]">Holo Alpha:</span>
+<input class="w-20 h-1 bg-purple-900 rounded appearance-none accent-pink-500 cursor-pointer" max="100" min="20" type="range" value="85"/>
+<span class="text-[10px] font-mono text-pink-300">85%</span>
+</div>
+<div class="h-3 w-[1px] bg-purple-500/40"></div>
+<div class="flex items-center gap-2">
+<span class="text-purple-300 font-mono text-[11px]">Neon Aura:</span>
+<input class="w-20 h-1 bg-purple-900 rounded appearance-none accent-cyan-400 cursor-pointer" max="100" min="0" type="range" value="100"/>
+<span class="text-[10px] font-mono text-cyan-300">100%</span>
+</div>
+<div class="h-3 w-[1px] bg-purple-500/40"></div>
+<label class="flex items-center gap-1.5 cursor-pointer text-slate-200">
+<input checked="" class="rounded bg-purple-950 border-purple-500/50 text-pink-500 focus:ring-0 w-3.5 h-3.5" type="checkbox"/>
+<span class="text-[11px]">Follow Cursor</span>
+</label>
+<button class="p-1 rounded hover:bg-purple-800 text-purple-300 hover:text-white" title="Lock Pin to Desktop">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- END: Main Interactive Overlay Interface -->
+<!-- BEGIN: Windows 11 Taskbar -->
+<footer class="absolute bottom-0 inset-x-0 h-12 bg-[#090715]/85 backdrop-blur-2xl border-t border-purple-500/30 z-40 flex items-center justify-between px-3 select-none" data-purpose="windows-11-taskbar">
+<!-- Left: Weather Widget (Windows 11 Style) -->
+<div class="flex items-center gap-2.5 px-2 py-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer w-44">
+<div class="text-cyan-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 00-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-slate-200">18°C Akihabara</span>
+<span class="text-[10px] text-purple-300">Clear Night • Air: Good</span>
+</div>
+</div>
+<!-- Center: Centered Windows 11 Taskbar Icons -->
+<div class="flex items-center gap-1">
+<!-- Windows Start Button -->
+<button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors group">
+<div class="grid grid-cols-2 gap-0.5 group-hover:scale-105 transition-transform">
+<div class="w-2 h-2 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-sm"></div>
+<div class="w-2 h-2 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-sm"></div>
+<div class="w-2 h-2 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-sm"></div>
+<div class="w-2 h-2 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-sm"></div>
+</div>
+</button>
+<!-- Task View -->
+<button class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors text-slate-300">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Active Running App: MIKO Hologram (Highlighted) -->
+<div class="relative w-10 h-10 rounded-lg flex items-center justify-center bg-purple-500/25 border border-purple-400/40 shadow-neon-purple cursor-pointer">
+<div class="w-6 h-6 rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-[10px] font-bold text-white">
+          M
+        </div>
+<span class="absolute bottom-1 w-2.5 h-0.5 bg-pink-400 rounded-full"></span>
+</div>
+<!-- Active Running App: Monster Hunter Wilds -->
+<div class="relative w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer">
+<div class="w-6 h-6 rounded bg-amber-700/80 border border-amber-400/40 flex items-center justify-center text-[10px] font-bold text-amber-200">
+          W
+        </div>
+<span class="absolute bottom-1 w-2.5 h-0.5 bg-amber-400 rounded-full"></span>
+</div>
+<!-- Active Running App: Spotify -->
+<div class="relative w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer">
+<svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewbox="0 0 24 24">
+<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"></path>
+</svg>
+<span class="absolute bottom-1 w-2.5 h-0.5 bg-emerald-400 rounded-full"></span>
+</div>
+<!-- App: VS Code -->
+<div class="relative w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer text-cyan-400">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .32 8.718l3.664 3.28-3.664 3.281a.999.999 0 0 0-.007 1.457l1.322 1.202a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.49 1.49 0 0 0 1.704.29l4.94-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352z"></path>
+</svg>
+</div>
+<!-- App: File Explorer -->
+<div class="relative w-10 h-10 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors cursor-pointer text-amber-300">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M19.5 21a3 3 0 0 0 3-3v-4.5a3 3 0 0 0-3-3h-1.5V9a3 3 0 0 0-3-3h-3.75A2.25 2.25 0 0 1 9 4.75V4.5A2.25 2.25 0 0 0 6.75 2.25H4.5A2.25 2.25 0 0 0 2.25 4.5v13.5A3 3 0 0 0 5.25 21h14.25z"></path>
+</svg>
+</div>
+</div>
+<!-- Right: System Tray & Clock -->
+<div class="flex items-center gap-3">
+<!-- System Tray Hidden Icons Trigger -->
+<button class="p-1.5 rounded-md hover:bg-white/10 text-purple-300">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 15l7-7 7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<!-- Miko Tray Status Pill -->
+<div class="flex items-center gap-1.5 px-2 py-1 rounded-full bg-purple-950/70 border border-purple-500/40 text-[11px] text-pink-300">
+<span class="w-2 h-2 rounded-full bg-pink-400 shadow-neon-pink"></span>
+<span class="font-medium">Miko Online</span>
+</div>
+<!-- WiFi & Audio & Battery -->
+<div class="flex items-center gap-2 text-slate-300 px-1">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25C2.89 16.5 2 14.35 2 12 2 6.48 6.48 2 12 2s10 4.48 10 10c0 2.35-.89 4.5-2.35 6.25l-.62-.64C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9zm0 4c-2.76 0-5 2.24-5 5 0 1.25.46 2.39 1.22 3.28l.71-.71C8.36 13.91 8 13.01 8 12c0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.01-.36 1.91-.93 2.57l.71.71C16.54 14.39 17 13.25 17 12c0-2.76-2.24-5-5-5zm0 4c-.55 0-1 .45-1 1 0 .28.11.53.29.71l.71.71.71-.71c.18-.18.29-.43.29-.71 0-.55-.45-1-1-1z"></path></svg>
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"></path></svg>
+<svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewbox="0 0 24 24"><path d="M17 5v14H7V5h10m1-2H6c-.55 0-1 .45-1 1v16c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-2 15H8v-2h8v2z"></path></svg>
+</div>
+<!-- Time & Date -->
+<div class="flex flex-col text-right pl-1 cursor-pointer hover:bg-white/5 px-2 py-0.5 rounded transition-colors">
+<span class="text-xs font-semibold text-slate-100 font-mono">21:45</span>
+<span class="text-[10px] text-purple-300 font-mono">2026/11/09</span>
+</div>
+</div>
+</footer>
+<!-- END: Windows 11 Taskbar -->
+</body></html>

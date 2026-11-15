@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Sora:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary-fixed": "#2c0051", "tertiary-container": "#009bd1", "inverse-on-surface": "#322e41", "on-secondary": "#640039", "on-surface-variant": "#cfc2d6", "background": "#141122", "surface-dim": "#141122", "tertiary": "#7bd0ff", "secondary-fixed-dim": "#ffb0cd", "error-container": "#93000a", "inverse-surface": "#e6dff8", "surface-container-low": "#1c192b", "on-secondary-fixed-variant": "#8c0053", "tertiary-fixed-dim": "#7bd0ff", "surface-bright": "#3a374a", "surface-container": "#201d2f", "surface-container-highest": "#363245", "on-error": "#690005", "on-tertiary-container": "#002d40", "on-error-container": "#ffdad6", "surface-tint": "#ddb7ff", "tertiary-fixed": "#c4e7ff", "surface-variant": "#363245", "primary-fixed": "#f0dbff", "on-tertiary": "#00354a", "surface-container-lowest": "#0f0c1d", "on-tertiary-fixed": "#001e2c", "on-secondary-container": "#ffbad3", "primary": "#ddb7ff", "surface": "#141122", "surface-container-high": "#2b283a", "on-primary-container": "#400071", "on-primary-fixed-variant": "#6900b3", "inverse-primary": "#842bd2", "outline-variant": "#4d4354", "error": "#ffb4ab", "secondary": "#ffb0cd", "on-primary": "#490080", "on-surface": "#e6dff8", "primary-fixed-dim": "#ddb7ff", "secondary-fixed": "#ffd9e4", "on-background": "#e6dff8", "outline": "#988d9f", "on-tertiary-fixed-variant": "#004c69", "primary-container": "#b76dff", "on-secondary-fixed": "#3e0022", "secondary-container": "#aa0266" }, "borderRadius": { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" }, "spacing": { "space-xl": "1.5rem", "space-md": "0.75rem", "space-lg": "1rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter": "1rem" }, "fontFamily": { "headline-xl": [ "Sora" ], "body-md": [ "Plus Jakarta Sans" ], "headline-md": [ "Sora" ], "label-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Plus Jakarta Sans" ], "body-lg": [ "Plus Jakarta Sans" ], "title-sm": [ "Sora" ], "headline-lg": [ "Sora" ], "label-md": [ "Plus Jakarta Sans" ] }, "fontSize": { "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "fontWeight": "700" } ], "body-md": [ "0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "headline-md": [ "1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "fontWeight": "700" } ], "body-sm": [ "0.75rem", { "lineHeight": "1rem", "fontWeight": "400" } ], "body-lg": [ "1rem", { "lineHeight": "1.5rem", "fontWeight": "400" } ], "title-sm": [ "0.9375rem", { "lineHeight": "1.25rem", "fontWeight": "600" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "fontWeight": "600" } ], "label-md": [ "0.8125rem", { "lineHeight": "1.125rem", "fontWeight": "600" } ] } } } };</script></head><body class="bg-surface-dim font-body-md text-body-md text-on-surface select-none antialiased min-h-screen"><header class="fixed top-0 left-0 right-0 z-50 flex flex-col bg-surface-container-lowest/80 backdrop-blur-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)]"><div class="h-10 px-space-md flex items-center justify-between bg-surface-container-lowest/60"><div class="flex items-center gap-space-sm"><div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary via-primary-container to-secondary flex items-center justify-center shadow-[0_0_12px_rgba(221,183,255,0.4)]"><span class="material-symbols-outlined text-[14px] text-on-primary-fixed">favorite</span></div><span class="font-title-sm text-title-sm tracking-wide text-primary-fixed">MIKO</span><span class="text-on-surface-variant font-body-sm text-body-sm hidden sm:inline">– Universal Search</span><div class="flex items-center gap-space-xs ml-space-sm px-space-sm py-0.5 rounded-full bg-surface-container-high/90"><span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_rgba(123,208,255,0.8)]"></span><span class="font-label-sm text-label-sm text-tertiary-fixed">Online • Ready</span></div></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px] text-tertiary">speed</span><span>1.2 Gbps</span></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px] text-secondary">schedule</span><span>14:32 JST</span></div></div><div class="flex items-center ml-space-sm"><button aria-label="Minimize" class="w-8 h-8 flex items-center justify-center rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[16px]">remove</span></button><button aria-label="Maximize" class="w-8 h-8 flex items-center justify-center rounded-DEFAULT text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[14px]">crop_square</span></button><button aria-label="Close" class="w-8 h-8 flex items-center justify-center rounded-DEFAULT text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-colors"><span class="material-symbols-outlined text-[16px]">close</span></button></div></div></div><div class="h-14 px-space-md flex items-center justify-between bg-surface-container-low/70 backdrop-blur-xl"><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-md font-semibold rounded-DEFAULT shadow-[0_0_16px_rgba(183,109,255,0.4)]"><a class="px-space-md py-space-xs rounded-DEFAULT font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="web-search" href="#">Web</a><a class="px-space-md py-space-xs rounded-DEFAULT font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="image-gallery" href="#">Images</a><a class="px-space-md py-space-xs rounded-DEFAULT font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="video-vault" href="#">Videos</a><a class="px-space-md py-space-xs rounded-DEFAULT font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="news-feed" href="#">News</a><a aria-current="page" class="px-space-md py-space-xs transition-all bg-primary-container text-on-primary-container font-headline-md font-semibold rounded-DEFAULT shadow-[0_0_16px_rgba(183,109,255,0.4)]" data-path="research-intel" href="#">Research</a><a class="px-space-md py-space-xs rounded-DEFAULT font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="downloads" href="#">Downloads</a></nav><div class="flex items-center gap-space-sm"><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px]">cleaning_services</span><span class="hidden lg:inline">Clear Session</span></button><a class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span></a><div class="pl-space-xs ml-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_0_10px_rgba(221,183,255,0.45)]" src="https://lh3.googleusercontent.com/aida/ALJJyrDewT1fZV0ZEXUphz7vvcMEmRHy-wB2A2xzc-IzQ0xo3x1zTVI9txFnajOYLedZv3G6D7RmpgIeIGdGfyoGM1m-AuyIYFHhzYtMCKOAAp7k0FhUeT0ZSeDK-_f5-wA3hHA90CPs6JKhq0CwtKz-l3LA5nLp_4S4qcMPyvkZJuhNW4u6-gbJtdiRqirsf-d9aLgR4I6PMt8x1KeeGKRF-wjkQIt8OPilOR23pBGwGJg2z3MZzY2m4dlgyTs"/></div></div></div></header><aside class="fixed right-0 top-24 bottom-8 w-80 z-40 p-space-md hidden xl:flex flex-col gap-space-md bg-surface-container-low/60 backdrop-blur-2xl shadow-[-8px_0_24px_rgba(0,0,0,0.3)]"><div class="flex items-center justify-between px-space-xs"><div class="flex items-center gap-space-sm"><span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span></span><span class="font-headline-md text-headline-md tracking-wider text-secondary-fixed">Miko ♡</span></div><span class="px-space-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary">Core v2.4</span></div><div class="relative rounded-lg overflow-hidden bg-gradient-to-b from-primary-container/20 to-surface-container-lowest p-space-sm flex flex-col items-center"><div class="relative w-28 h-28 my-space-xs"><div class="absolute inset-0 rounded-full bg-gradient-to-tr from-primary to-secondary blur-lg opacity-40 animate-pulse"></div><img alt="Miko Companion" class="relative w-28 h-28 rounded-full object-cover shadow-[0_0_20px_rgba(183,109,255,0.5)]" src="https://lh3.googleusercontent.com/aida/ALJJyrDewT1fZV0ZEXUphz7vvcMEmRHy-wB2A2xzc-IzQ0xo3x1zTVI9txFnajOYLedZv3G6D7RmpgIeIGdGfyoGM1m-AuyIYFHhzYtMCKOAAp7k0FhUeT0ZSeDK-_f5-wA3hHA90CPs6JKhq0CwtKz-l3LA5nLp_4S4qcMPyvkZJuhNW4u6-gbJtdiRqirsf-d9aLgR4I6PMt8x1KeeGKRF-wjkQIt8OPilOR23pBGwGJg2z3MZzY2m4dlgyTs"/></div><div class="w-full mt-space-sm p-space-md rounded-DEFAULT bg-surface-container-high/70 backdrop-blur-md"><div class="flex items-center gap-space-xs mb-space-xs"><span class="material-symbols-outlined text-[14px] text-tertiary">auto_awesome</span><span class="font-label-sm text-label-sm text-tertiary">Companion Dialogue</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">"I'm monitoring your query pipelines. Ask anything across global networks or databases!"</p></div></div><div class="flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-on-surface-variant px-space-xs uppercase tracking-wider">Suggested Inquiries</span><div class="flex flex-wrap gap-space-xs"><button class="px-space-md py-space-xs rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all text-left"># Tokyo Cyberpunk Trends</button><button class="px-space-md py-space-xs rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all text-left"># Quantum Computing Papers</button><button class="px-space-md py-space-xs rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all text-left"># Ambient Lo-Fi Stems</button></div></div><div class="mt-auto p-space-md rounded-DEFAULT bg-surface-container-lowest/80"><div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant mb-space-xs"><span>Context Buffer</span><span class="text-primary">88% Free</span></div><div class="w-full h-1.5 rounded-full bg-surface-container-highest overflow-hidden"><div class="h-full bg-gradient-to-r from-tertiary to-primary-container w-[12%] rounded-full"></div></div></div></aside><div class="xl:pr-80"><main class="w-full pt-24 pb-8 min-h-screen bg-surface-dim"><div class="flex flex-col w-full">
+<!-- Glowing Ambient Canvas Lighting Layer -->
+<div class="relative w-full px-space-lg py-space-md">
+<!-- Top Research Meta Header Panel -->
+<div class="relative overflow-hidden rounded-lg bg-surface-container-low/80 backdrop-blur-2xl p-space-lg mb-space-lg shadow-xl shadow-surface-container-lowest/60">
+<div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-gradient-to-br from-primary-container/20 via-secondary/15 to-transparent blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex items-start sm:items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container flex items-center justify-center shadow-[0_0_20px_rgba(183,109,255,0.45)] shrink-0">
+<span class="material-symbols-outlined text-[24px] text-on-primary" style="font-variation-settings: 'FILL' 1;">biotech</span>
+</div>
+<div>
+<div class="flex flex-wrap items-center gap-space-xs mb-1">
+<span class="px-space-sm py-0.5 rounded-full bg-secondary-container/60 text-secondary-fixed font-label-sm text-label-sm tracking-wide">
+                DEEP DIVE REPORT #882
+              </span>
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(123,208,255,0.8)] animate-pulse"></span>
+                Synthesized by Miko Core v2.4
+              </span>
+<span class="text-on-surface-variant text-label-sm font-label-sm">• Cross-Examined</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary-fixed tracking-tight">
+              Optimal Kinsect &amp; Weapon Scaling in Monster Hunter Wilds
+            </h1>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm shrink-0">
+<div class="px-space-md py-space-xs rounded-DEFAULT bg-surface-container-high/90 flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">verified</span>
+<span class="font-label-sm text-label-sm text-on-surface">38 Sources Analyzed</span>
+<span class="text-outline text-label-sm font-label-sm">|</span>
+<span class="font-label-sm text-label-sm text-tertiary">99.4% Confidence</span>
+</div>
+<button class="px-space-md py-space-xs rounded-DEFAULT bg-primary hover:bg-primary-fixed text-on-primary font-label-md text-label-md transition-all shadow-[0_0_16px_rgba(221,183,255,0.35)] flex items-center gap-space-xs" id="rescan-btn">
+<span class="material-symbols-outlined text-[16px]">cycle</span>
+<span>Update Datamine</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 3-Column Bespoke Workspace Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Source Intel & Inspection Feed (3 cols) -->
+<div class="lg:col-span-3 flex flex-col gap-space-md">
+<!-- Section Header -->
+<div class="flex items-center justify-between px-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">library_books</span>
+<span class="font-headline-md text-headline-md text-on-surface tracking-wide">Source Intel</span>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high font-label-sm text-label-sm text-on-surface-variant">
+            4 / 4 Active
+          </span>
+</div>
+<!-- Metric Filter Pills -->
+<div class="grid grid-cols-2 gap-space-xs">
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-low/70 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Citation Density</span>
+<span class="font-headline-md text-headline-md text-tertiary">142 Pts</span>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-low/70 flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Conflict Rate</span>
+<span class="font-headline-md text-headline-md text-secondary">2.8%</span>
+</div>
+</div>
+<!-- Source List Cards -->
+<div class="flex flex-col gap-space-sm">
+<!-- Source Item 1 -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-low/80 hover:bg-surface-container/90 transition-all shadow-md group">
+<div class="flex items-start justify-between gap-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-md bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-primary transition-colors line-clamp-1">Capcom Dev Blog</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-semibold">Tier 1</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-sm">
+              Patch note breakdown on weapon motion values, kinsect flight velocity multipliers, and wound rupture thresholds.
+            </p>
+<div class="flex items-center justify-between pt-space-xs border-t-0 bg-surface-container-lowest/40 -mx-space-md -mb-space-md px-space-md py-space-xs rounded-b-DEFAULT">
+<span class="font-label-sm text-label-sm text-on-surface-variant">98% Credibility</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-7 h-4 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Source Item 2 -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-low/80 hover:bg-surface-container/90 transition-all shadow-md group">
+<div class="flex items-start justify-between gap-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-md bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-secondary transition-colors line-clamp-1">Reddit r/MH Datamining</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-secondary-container/40 text-secondary font-semibold">v1.04</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-sm">
+              Extracted internal lua parameters for elemental tick intervals and status proc multipliers across weapon categories.
+            </p>
+<div class="flex items-center justify-between pt-space-xs bg-surface-container-lowest/40 -mx-space-md -mb-space-md px-space-md py-space-xs rounded-b-DEFAULT">
+<span class="font-label-sm text-label-sm text-on-surface-variant">95% Credibility</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-7 h-4 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Source Item 3 -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-low/80 hover:bg-surface-container/90 transition-all shadow-md group">
+<div class="flex items-start justify-between gap-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-md bg-surface-container-highest flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[14px]">menu_book</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-tertiary transition-colors line-clamp-1">Game8 Wiki Engine</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-semibold">Live Build</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-sm">
+              Validated endgame armor skill synergies with Attack Boost Lv7 vs Critical Eye Lv7 efficiency tables.
+            </p>
+<div class="flex items-center justify-between pt-space-xs bg-surface-container-lowest/40 -mx-space-md -mb-space-md px-space-md py-space-xs rounded-b-DEFAULT">
+<span class="font-label-sm text-label-sm text-on-surface-variant">89% Credibility</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-7 h-4 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+<!-- Source Item 4 -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container-low/80 hover:bg-surface-container/90 transition-all shadow-md group">
+<div class="flex items-start justify-between gap-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-md bg-surface-container-highest flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[14px]">monitoring</span>
+</div>
+<span class="font-title-sm text-title-sm text-on-surface group-hover:text-primary-fixed transition-colors line-clamp-1">IGN Benchmark Lab</span>
+</div>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-semibold">Testing</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-sm">
+              Dummy training area frame-by-frame damage capture for triple-buff Insect Glaive aerial maneuvers.
+            </p>
+<div class="flex items-center justify-between pt-space-xs bg-surface-container-lowest/40 -mx-space-md -mb-space-md px-space-md py-space-xs rounded-b-DEFAULT">
+<span class="font-label-sm text-label-sm text-on-surface-variant">91% Credibility</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-7 h-4 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Add Source Button -->
+<button class="w-full py-space-sm px-space-md rounded-DEFAULT bg-surface-container-high/60 hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all font-label-md text-label-md flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">add_link</span>
+<span>Inject Custom URL / Paper</span>
+</button>
+</div>
+<!-- MIDDLE COLUMN: Miko Structured Synthesis Report (6 cols) -->
+<div class="lg:col-span-6 flex flex-col gap-space-md">
+<!-- Synthesis Canvas Container -->
+<div class="p-space-lg rounded-lg bg-surface-container-low/90 backdrop-blur-2xl shadow-xl flex flex-col gap-space-lg">
+<!-- Top Tool Action Strip -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm bg-surface-container-lowest/50 -mx-space-lg -mt-space-lg px-space-lg py-space-sm rounded-t-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">auto_read_play</span>
+<span class="font-title-sm text-title-sm text-primary-fixed">Synthesis Canvas</span>
+<span class="px-space-xs py-0.5 rounded bg-primary-container/20 text-primary font-label-sm text-label-sm">LIVE MARKDOWN</span>
+</div>
+<!-- Export Toolkit -->
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Export to PDF">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+</button>
+<button class="p-1.5 rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Copy Markdown">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+</button>
+<button class="p-1.5 rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Save to Obsidian">
+<span class="material-symbols-outlined text-[16px]">note_add</span>
+</button>
+<button class="p-1.5 rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors" title="Sync to Cloud">
+<span class="material-symbols-outlined text-[16px]">cloud_sync</span>
+</button>
+</div>
+</div>
+<!-- Section 1: Executive Summary -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">01 // Key Findings</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Executive Summary: The Raw vs. Element Shift</h2>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              With the overhaul of weapon friction and wound opening mechanics in Monster Hunter Wilds v1.04, pure Raw scaling for the Insect Glaive has yielded a <span class="text-secondary font-semibold">14.2% DPS loss</span> against multi-limb apex monsters. Fast-attacking multi-hit aerial combos trigger elemental tick scaling at 0.85x base frequency, making dual-stat Kinsects with Powder Vortex the undisputed meta.
+            </p>
+</div>
+<!-- Embedded Visual Media Preview -->
+<div class="grid grid-cols-2 gap-space-md">
+<div class="relative rounded-DEFAULT overflow-hidden group">
+<img class="w-full h-36 object-cover rounded-DEFAULT transition-transform duration-500 group-hover:scale-105" data-alt="Dynamic cyberpunk anime game screenshot depicting a fierce combat scene in Monster Hunter with an Insect Glaive hunter wielding glowing lavender extract dust against a draconic monster in a stormy neon violet environment, vivid cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9YmXurdmQbTqY8CHrJ0_9DRBskQhv1yfvH-xeQ1uXSpISMbSL_94YO6KQDWxNshbJVgY0hTtxwo_YxPYsGdcouqzDBtbCDv4Q1YTXNxRAekC1I7Ka2mQHZ2Th6argv-9OKJVSJioKeUiBPSi5aA22OgQoHeh456KH-1t9aV_WBoBFhjPKSR94_TRWT3aEVjSY48ZexkyAWaiqMGTl23PwH4eXTgPniYcLDLBpiVM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-transparent to-transparent flex items-end p-space-xs">
+<span class="font-label-sm text-label-sm text-primary-fixed">Powder Explosion Zone Test</span>
+</div>
+</div>
+<div class="relative rounded-DEFAULT overflow-hidden group">
+<img class="w-full h-36 object-cover rounded-DEFAULT transition-transform duration-500 group-hover:scale-105" data-alt="High tech digital tactical display showcasing futuristic weapon stats, detailed elemental diagrams with glowing cyan and hot pink energy vectors, holographic sci-fi UI overlay in dark violet aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAK5iRLDQ1SQ8m_NKViOuTTh05iALivwZff_QGHD4nvABCG-QLHuuu9Nkt6rT6sluL8UMOk6X-rVWV-D0-XBQ_FvW4gC1tJxRzlpHUpvz4gY2NcMAC2ULi9JlFM5M__YbiQLJWDPb4oEJvHKn9ElWUv-4jPvipM-uh1Nt_zDFZWa2gb9XDAfRoi5nsRMHdaYXYo2mkC3zeL68ycaGmvJ4CFlsDySvnWDaBAcI5iVzI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-transparent to-transparent flex items-end p-space-xs">
+<span class="font-label-sm text-label-sm text-tertiary-fixed">Kinsect Speed vs Charge Curve</span>
+</div>
+</div>
+</div>
+<!-- Section 2: Comparative Weapon Scaling Chart -->
+<div class="p-space-md rounded-DEFAULT bg-surface-container/70 flex flex-col gap-space-sm shadow-inner">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-tertiary tracking-widest uppercase">02 // Metric Benchmark</span>
+<h3 class="font-title-sm text-title-sm text-on-surface">DPS Output by Build Paradigm (100-Sec Cycle)</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Simulated vs Lv5 Apex</span>
+</div>
+<!-- Inline SVG Data Chart -->
+<div class="w-full pt-space-xs">
+<div class="flex flex-col gap-space-sm">
+<!-- Bar 1 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+                      Elemental Kinsect Synergy (Dragon / Blast)
+                    </span>
+<span class="text-secondary font-bold">1,842 DPS (+22%)</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary-container via-secondary to-primary-fixed-dim rounded-full w-[94%] shadow-[0_0_12px_rgba(255,176,205,0.6)]"></div>
+</div>
+</div>
+<!-- Bar 2 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                      Pure Critical Raw (Attack Boost Lv7 + Master's Touch)
+                    </span>
+<span class="text-primary font-bold">1,510 DPS (Baseline)</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary-container to-primary rounded-full w-[76%]"></div>
+</div>
+</div>
+<!-- Bar 3 -->
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="text-on-surface flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
+                      Status Build (Paralysis Powder Lock)
+                    </span>
+<span class="text-tertiary font-bold">1,390 DPS (Utility Focus)</span>
+</div>
+<div class="w-full h-3 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-tertiary-container to-tertiary rounded-full w-[68%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Citations Quote Callout -->
+<div class="mt-space-xs p-space-sm rounded-DEFAULT bg-surface-container-lowest/70 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">format_quote</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<span class="text-on-surface font-semibold">Datamine Cross-Check:</span> "The wound burst coefficient applies a separate 1.35x modifier exclusively to elemental ticks generated while the Kinsect is actively recalled." 
+                <span class="text-primary hover:underline cursor-pointer font-label-sm">[Reddit r/MH Datamine §4.2]</span>
+</p>
+</div>
+</div>
+<!-- Section 3: Kinsect Synergy & Deco Priority Formula -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">03 // Loadout Architecture</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Deco Priority Formula &amp; Kinsect Choice</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm pt-space-xs">
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/60 flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-[16px]">flare</span>
+<span class="font-title-sm text-title-sm">Fulgurbug Speed Type</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Level 14 Speed allows instantaneous triple extract harvesting. Pair with Wind Choir IG for auto-harvest resonance.
+                </p>
+</div>
+<div class="p-space-sm rounded-DEFAULT bg-surface-container-high/60 flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-tertiary">
+<span class="material-symbols-outlined text-[16px]">diamond</span>
+<span class="font-title-sm text-title-sm">Slot Hierarchy</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Burst Lv3 &gt; Element Atk Lv5 &gt; Crit Element Lv3 &gt; WEX Lv3. Pure raw attack decos drop to 4th priority.
+                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Miko Copilot Interactive Dialogue & Brainstorming (3 cols) -->
+<div class="lg:col-span-3 flex flex-col gap-space-md">
+<!-- Copilot Header Widget -->
+<div class="p-space-md rounded-lg bg-surface-container-low/80 backdrop-blur-2xl shadow-xl flex flex-col gap-space-md relative overflow-hidden">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+</span>
+<span class="font-title-sm text-title-sm text-secondary-fixed">Miko Copilot</span>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-primary-container/30 text-primary-fixed font-label-sm text-label-sm">Active Dialogue</span>
+</div>
+<!-- Miko Anime Visual Representation -->
+<div class="relative w-full rounded-DEFAULT overflow-hidden bg-gradient-to-b from-primary-container/20 to-surface-container-lowest flex items-center justify-center p-space-sm">
+<div class="relative w-32 h-32">
+<div class="absolute inset-0 rounded-full bg-gradient-to-tr from-primary to-secondary blur-xl opacity-50 animate-pulse"></div>
+<img class="relative w-32 h-32 rounded-full object-cover shadow-[0_0_24px_rgba(221,183,255,0.6)]" data-alt="Charming and vibrant anime companion girl with glowing feline cat-ear headphones, deep purple hair, expressive sparkling violet eyes, playful wink and peace sign, neon synth ambient lighting in cyber bedroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVMjgTQHdBQHvs0s5MsuJ1WHbsO3Y6cq5wAVfJFJ9D1Du5zy7ChyRvDVixv4CFfLz4HJZAJDWnphK9mJ4eNHva4tZQ5UrAsk3UKU7XIeGZYgeSSNsdZXW788vM8X0kfHvmOnzxGFBgzHWwDlRWL7G7DnIbMwK1Sj7Q3Kql3f90UkN5Y7KsvA3SFzgx6EjU0XD37aN3gOMQQGiUt5nbqaYZLYGEnHxAAR608e_Mchc"/>
+</div>
+<div class="absolute bottom-2 right-2 bg-surface-container-highest/90 px-space-xs py-0.5 rounded-full flex items-center gap-1 shadow-md">
+<span class="material-symbols-outlined text-secondary text-[12px]">favorite</span>
+<span class="font-label-sm text-label-sm text-secondary-fixed">98% Sync</span>
+</div>
+</div>
+<!-- Miko Speech Bubble -->
+<div class="relative p-space-md rounded-DEFAULT bg-surface-container-high/90 text-on-surface shadow-[0_0_20px_rgba(183,109,255,0.15)] flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Hypothesis Conflict Alert</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              "Master! I noticed conflicting reports regarding the <span class="text-secondary font-semibold">Poison status buildup</span> on flying wyverns. Based on the 1.04 datamine, status threshold increases by 15% per proc. Would you like me to recalculate?"
+            </p>
+</div>
+<!-- Quick Action Brainstorming Chips -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider px-1">
+              Suggested Miko Actions
+            </span>
+<div class="flex flex-col gap-space-xs">
+<button class="copilot-action-chip px-space-md py-space-xs rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-left text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all flex items-center justify-between group">
+<span>⚡ Recalculate with 15% decay</span>
+<span class="material-symbols-outlined text-[14px] text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="copilot-action-chip px-space-md py-space-xs rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-left text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all flex items-center justify-between group">
+<span>⚔️ Compare with Dual Blades</span>
+<span class="material-symbols-outlined text-[14px] text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="copilot-action-chip px-space-md py-space-xs rounded-DEFAULT bg-surface-container hover:bg-surface-container-high text-left text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all flex items-center justify-between group">
+<span>📜 Draft endgame build guide</span>
+<span class="material-symbols-outlined text-[14px] text-primary opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Conversational Prompt Bar -->
+<div class="pt-space-xs">
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-lowest/80 text-on-surface placeholder:text-outline font-body-sm text-body-sm rounded-full pl-space-md pr-20 py-2.5 focus:outline-none focus:ring-2 focus:ring-primary shadow-inner" id="copilot-query-input" placeholder="Direct Miko's next query..." type="text"/>
+<div class="absolute right-1.5 flex items-center gap-1">
+<button class="w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant hover:text-tertiary flex items-center justify-center transition-colors" title="Voice Input">
+<span class="material-symbols-outlined text-[16px]">mic</span>
+</button>
+<button class="w-7 h-7 rounded-full bg-gradient-to-r from-primary to-secondary text-on-primary flex items-center justify-center shadow-[0_0_10px_rgba(221,183,255,0.5)] hover:scale-105 active:scale-95 transition-all" id="copilot-send-btn" title="Send Directive">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Miko Research Status & System Health Mini Widget -->
+<div class="p-space-md rounded-lg bg-surface-container-low/70 flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-tertiary text-[20px]">memory</span>
+<div class="flex flex-col">
+<span class="font-title-sm text-title-sm text-on-surface">Neural Scratchpad</span>
+<span class="font-label-sm text-label-sm text-tertiary">382 vectors cached</span>
+</div>
+</div>
+<button class="px-space-sm py-1 rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+            Purge
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for the Research Workspace
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('copilot-query-input');
+    const sendBtn = document.getElementById('copilot-send-btn');
+    const rescanBtn = document.getElementById('rescan-btn');
+    const chips = document.querySelectorAll('.copilot-action-chip');
+
+    const handleSend = () => {
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      input.placeholder = 'Miko is analyzing and drafting cross-verifications...';
+      setTimeout(() => {
+        input.placeholder = "Direct Miko's next query...";
+      }, 2500);
+    };
+
+    if (sendBtn && input) {
+      sendBtn.addEventListener('click', handleSend);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleSend();
+      });
+    }
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.querySelector('span').textContent.replace(/^[^\s]+\s/, '');
+        if (input) {
+          input.value = text;
+          input.focus();
+        }
+      });
+    });
+
+    if (rescanBtn) {
+      rescanBtn.addEventListener('click', () => {
+        const originalText = rescanBtn.innerHTML;
+        rescanBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Scanning 1.04 Lua...</span>';
+        rescanBtn.disabled = true;
+        setTimeout(() => {
+          rescanBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span><span>Datamine Fresh</span>';
+          setTimeout(() => {
+            rescanBtn.innerHTML = originalText;
+            rescanBtn.disabled = false;
+          }, 1800);
+        }, 1500);
+      });
+    }
+  });
+</script></main></div><footer class="fixed bottom-0 left-0 right-0 h-8 z-50 bg-surface-container-lowest/90 backdrop-blur-md px-space-md flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant"><div class="flex items-center gap-space-md"><span>MIKO OS Desktop Host</span><span class="text-outline">|</span><span class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[12px] text-tertiary">dns</span>Node: US-WEST-02</span></div><div class="flex items-center gap-space-md"><span>Active Session: #9402-DELTA</span><span class="text-outline">|</span><span class="text-secondary">Secure SSL/TLS</span></div></footer></body></html>
